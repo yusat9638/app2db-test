@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+from tokenize import Token
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -74,13 +75,24 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': "mssql",
+        'HOST': "dev-paasqaje51-sqldbsv-keoy44y2o6qku.database.windows.net", # should be stored secret
+        'PORT': "1433",
+        'NAME': "dev-PaaSQAje51-sqldb",
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+            "extra_params": "Authentication=ActiveDirectoryMsi",
+        },
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
