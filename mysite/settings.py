@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 from tokenize import Token
 
@@ -21,12 +21,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_7oj#tnw+)1&57c&rtn7q@!1+v6(7#z!5i+j9m9+y)b0=f$aa#'
+SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '.azurewebsites.net']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    f"{os.environ['WEBSITE_SITE_NAME']}.azurewebsites.net",
+]
 
 
 # Application definition
@@ -43,7 +46,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # add whitenoise
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -76,18 +79,12 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': BASE_DIR / 'db.sqlite3',
-#    }
-# }
 DATABASES = {
     'default': {
         'ENGINE': "mssql",
-        'HOST': "dev-paasqaje51-sqldbsv-keoy44y2o6qku.database.windows.net", # should be stored secret
-        'PORT': "1433",
-        'NAME': "dev-PaaSQAje51-sqldb",
+        'HOST': os.environ['DJANGO_DB_HOST'],
+        'PORT': os.environ['DJANGO_DB_PORT'],
+        'NAME': os.environ['DJANGO_DB_NAME'],
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
             "extra_params": "Authentication=ActiveDirectoryMsi",
@@ -138,4 +135,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CSRF_TRUSTED_ORIGINS = ['https://dev-paasqaje51-ap-keoy44y2o6qku.azurewebsites.net']
+CSRF_TRUSTED_ORIGINS = [
+    # 'https://dev-paasqaje51-ap-keoy44y2o6qku.azurewebsites.net'
+    f"https://{os.environ['WEBSITE_SITE_NAME']}.azurewebsites.net"
+]
