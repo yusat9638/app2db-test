@@ -136,6 +136,5 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_TRUSTED_ORIGINS = [
-    # 'https://dev-paasqaje51-ap-keoy44y2o6qku.azurewebsites.net'
-    f"https://{os.environ['WEBSITE_SITE_NAME']}.azurewebsites.net"
+    f"https://{os.environ['WEBSITE_SITE_NAME']}.azurewebsites.net".lower()
 ]
